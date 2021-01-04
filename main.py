@@ -1,5 +1,5 @@
 # credit to TechWithTim (Youtuber) for this code tutorial project.
-# video bookmark: 1:20:20
+# video bookmark: 1:37:30
 
 import pygame
 import os
@@ -42,13 +42,13 @@ class Laser:
         self.y += vel
 
     def off_screen(self, height):
-        return self.y <= height and self.y >= 0
+        return not(self.y <= height and self.y >= 0)
 
     def collision(self, obj):
         return collide(self, obj)
 
 class Ship:
-    COOLDOWN = 30
+    COOLDOWN = 5
 
     def __init__(self, x, y, health=100):
         self.x = x
@@ -61,6 +61,19 @@ class Ship:
 
     def draw(self, window):
         window.blit(self.ship_img, (self.x, self.y))
+        for laser in self.lasers:
+            laser.draw(window)
+
+    def move_lasers(self, vel, obj):
+        self.cooldown()
+        for laser in self.lasers:
+            laser.move(vel)
+            if laser.off_screen(HEIGHT):
+                self.lasers.remove(laser)
+            elif laser.collision(obj):
+                obj.health -= 10
+                self.lasers.remove(laser)
+
 
     def cooldown(self):
         if self.cool_down_counter >= self.COOLDOWN:
@@ -70,7 +83,7 @@ class Ship:
 
     def shoot(self):
         if self.cool_down_counter == 0:
-            later = laser(x, y, self.laser_img)
+            laser = Laser(self.x, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1
     
@@ -87,6 +100,18 @@ class Player(Ship):
         self.laser_img  = YELLOW_LASER
         self.mask       = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
+
+    def move_lasers(self, vel, objs):
+        self.cooldown()
+        for laser in self.lasers:
+            laser.move(vel)
+            if laser.off_screen(HEIGHT):
+                self.lasers.remove(laser)
+            else:
+                for obj in objs:
+                    if laser.collision(obj):
+                        objs.remove(obj)
+                        self.lasers.remove(laser)
 
 class Enemy(Ship):
     COLOR_MAP = {
@@ -118,9 +143,9 @@ def main():
 
     enemies = []
     wave_length = 5
-    enemy_vel = 20
-
-    player_vel = 10
+    enemy_vel = 5
+    laser_vel = 20
+    player_vel = 20
 
     player = Player(300, 650)
 
@@ -175,20 +200,25 @@ def main():
                 run = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a] and player.x - player_vel > 0: # left
+        if keys[pygame.K_LEFT] and player.x - player_vel > 0: # left
             player.x -= player_vel
-        if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH: # right
+        if keys[pygame.K_RIGHT] and player.x + player_vel + player.get_width() < WIDTH: # right
             player.x += player_vel
-        if keys[pygame.K_w] and player.y - player_vel > 0: # up
+        if keys[pygame.K_UP] and player.y - player_vel > 0: # up
             player.y -= player_vel
-        if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT: # down
+        if keys[pygame.K_DOWN] and player.y + player_vel + player.get_height() < HEIGHT: # down
             player.y += player_vel
+        if keys[pygame.K_SPACE]:
+            player.shoot()
 
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
+            enemy.move_lasers(laser_vel, player)
             if enemy.y + enemy.get_height() > HEIGHT:
                 lives -= 1
                 enemies.remove(enemy)
+
+        player.move_lasers(-laser_vel, enemies)
         
 main()
 
