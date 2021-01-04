@@ -45,9 +45,11 @@ class Laser:
         return self.y <= height and self.y >= 0
 
     def collision(self, obj):
-        return collide(obj, self)
+        return collide(self, obj)
 
 class Ship:
+    COOLDOWN = 30
+
     def __init__(self, x, y, health=100):
         self.x = x
         self.y = y
@@ -60,6 +62,18 @@ class Ship:
     def draw(self, window):
         window.blit(self.ship_img, (self.x, self.y))
 
+    def cooldown(self):
+        if self.cool_down_counter >= self.COOLDOWN:
+            self.cool_down_counter = 0
+        elif self.cool_down_counter > 0:
+            self.cool_down_counter += 1
+
+    def shoot(self):
+        if self.cool_down_counter == 0:
+            later = laser(x, y, self.laser_img)
+            self.lasers.append(laser)
+            self.cool_down_counter = 1
+    
     def get_width(self):
         return self.ship_img.get_width()
 
@@ -90,7 +104,9 @@ class Enemy(Ship):
         self.y += vel
 
 def collide(obj1, obj2):
-
+    offset_x = obj2.x - obj1.x
+    offset_y = obj2.y - obj1.y
+    return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
 def main():
     run   = True
