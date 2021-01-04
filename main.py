@@ -1,5 +1,5 @@
 # credit to TechWithTim (Youtuber) for this code tutorial project.
-# video bookmark: 56:33
+# video bookmark: 1:20:20
 
 import pygame
 import os
@@ -27,6 +27,25 @@ YELLOW_LASER      = pygame.image.load(os.path.join("assets", "pixel_laser_yellow
 
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
+
+class Laser:
+    def __init__(self, x, y, img):
+        self.x = x
+        self.y = y
+        self.img = img
+        self.mask = pygame.mask.from_surface(self.img)
+
+    def draw(self, window):
+        window.blit(self.img, (self.x, self.y))
+
+    def move(self, vel):
+        self.y += vel
+
+    def off_screen(self, height):
+        return self.y <= height and self.y >= 0
+
+    def collision(self, obj):
+        return collide(obj, self)
 
 class Ship:
     def __init__(self, x, y, health=100):
@@ -69,6 +88,9 @@ class Enemy(Ship):
 
     def move(self, vel):
         self.y += vel
+
+def collide(obj1, obj2):
+
 
 def main():
     run   = True
