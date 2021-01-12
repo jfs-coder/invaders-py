@@ -1,18 +1,19 @@
-# VERSION 0.3e
+# VERSION 0.3f
 # Message to make sure that merge works now without issues.
 # credit to TechWithTim (Youtuber) for this code tutorial project.
 # TODO LIST:
 # 1 [✔] Get perfect center for enemy lasers shooting
 # 2 [✔] Better <TITLE> screen (not just "Click mouse")
 # 3 [✔] Add music.
-# 4 [-] Add a <PAUSE> function keybind (probably 'p' to pause)
+# 4 [-] Add bullets shot counter
+# 5 [-] Add a <PAUSE> function keybind (probably 'p' to pause)
 
 import pygame
 import os
 import time
 import random
 pygame.font.init()
-pygame.init()
+pygame.mixer.init()
 
 WIDTH, HEIGHT = 750, 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -60,7 +61,7 @@ class Laser:
 
 class Ship:
     COOLDOWN = 5
-
+    
     def __init__(self, x, y, health=100):
         self.x = x
         self.y = y
@@ -97,7 +98,7 @@ class Ship:
             laser = Laser(self.x, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1
-    
+        
     def get_width(self):
         return self.ship_img.get_width()
 
@@ -111,6 +112,14 @@ class Player(Ship):
         self.laser_img  = YELLOW_LASER
         self.mask       = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
+        self.shots = 0
+
+    def shoot(self):
+        if self.cool_down_counter == 0:
+            laser = Laser(self.x, self.y, self.laser_img)
+            self.lasers.append(laser)
+            self.cool_down_counter = 1
+            self.shots += 1
 
     def move_lasers(self, vel, objs):
         self.cooldown()
@@ -166,7 +175,7 @@ def collide(obj1, obj2):
 def main():
     run   = True
     FPS   = 60
-    level = 0
+    wave = 0
     lives = 20  # default = 5
     main_font = pygame.font.SysFont("comicsans", 50)
     lost_font = pygame.font.SysFont("comicsans", 60)
@@ -188,10 +197,12 @@ def main():
         WIN.blit(BG, (0,0))
         # draw text
         lives_label = main_font.render(f'Lives: {lives}', 1, (255,255,255))
-        level_label = main_font.render(f'Level: {level}', 1, (255,255,255))
+        wave_label = main_font.render(f'Wave: {wave}', 1, (255,255,255))
+        shots_label = main_font.render(f'Shots: {player.shots}', 1, (255,255,255))
 
         WIN.blit(lives_label, (10, 10))
-        WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
+        WIN.blit(wave_label, (WIDTH - wave_label.get_width() - 10, 10))
+        WIN.blit(shots_label, (10, 50))
 
         for enemy in enemies:
             enemy.draw(WIN)
@@ -219,7 +230,7 @@ def main():
                 continue
         
         if len(enemies) == 0:
-            level += 1
+            wave += 1
             wave_length += 5
             for i in range(wave_length):
                 enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
