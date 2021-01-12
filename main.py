@@ -1,4 +1,4 @@
-# VERSION 0.3b
+# VERSION 0.3c
 # Message to make sure that merge works now without issues.
 # credit to TechWithTim (Youtuber) for this code tutorial project.
 # TODO LIST:
