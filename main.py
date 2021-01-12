@@ -134,6 +134,7 @@ class Enemy(Ship):
     }
 
     def __init__(self, x, y, color, health = 100):
+        self.color = color
         super().__init__(x, y, health)
         self.ship_img, self.laser_img = self.COLOR_MAP[color]
         self.mask = pygame.mask.from_surface(self.ship_img)
@@ -143,7 +144,10 @@ class Enemy(Ship):
 
     def shoot(self):
         if self.cool_down_counter == 0:
-            laser = Laser(self.x-20, self.y, self.laser_img)
+            if self.color == "blue":
+                laser = Laser(self.x - int((self.ship_img.get_width() / 2)), self.y, self.laser_img)
+            else: 
+                laser = Laser(self.x-15, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1
 
@@ -156,7 +160,7 @@ def main():
     run   = True
     FPS   = 60
     level = 0
-    lives = 5
+    lives = 20  # default = 5
     main_font = pygame.font.SysFont("comicsans", 50)
     lost_font = pygame.font.SysFont("comicsans", 60)
 
