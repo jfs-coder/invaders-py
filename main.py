@@ -4,17 +4,23 @@
 # TODO LIST:
 # 1 [✔] Get perfect center for enemy lasers shooting
 # 2 [✔] Better <TITLE> screen (not just "Click mouse")
-# 3 [-] Add sound effect and music.
+# 3 [✔] Add music.
+# 4 [-] Add a <PAUSE> function keybind (probably 'p' to pause)
 
 import pygame
 import os
 import time
 import random
 pygame.font.init()
+pygame.init()
 
 WIDTH, HEIGHT = 750, 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Invaders!!!")
+
+# Load sounds / music   (Music Options Are: music_loop.mp3 and music2_loop.mp3)
+pygame.mixer.music.load(os.path.join("sounds", "music2_loop.mp3"))
+pygame.mixer.music.play(-1)
 
 # Load images
 RED_SPACE_SHIP    = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -207,7 +213,7 @@ def main():
             lost_count += 1
 
         if lost:
-            if lost_count > FPS * 3:
+            if lost_count > FPS * 1:
                 run = False
             else: 
                 continue
