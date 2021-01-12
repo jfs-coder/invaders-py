@@ -1,4 +1,4 @@
-# VERSION 0.1
+# VERSION 0.1a
 # credit to TechWithTim (Youtuber) for this code tutorial project.
 # TODO LIST:
 # 1 - Get perfect center for enemy lasers shooting
