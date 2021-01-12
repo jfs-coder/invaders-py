@@ -1,10 +1,10 @@
-# VERSION 0.3c
+# VERSION 0.3d
 # Message to make sure that merge works now without issues.
 # credit to TechWithTim (Youtuber) for this code tutorial project.
 # TODO LIST:
-# 1 - Get perfect center for enemy lasers shooting
-# 2 - Better <TITLE> screen (not just "Click mouse")
-# 3 - Add sound effect and music.
+# 1 [✔] Get perfect center for enemy lasers shooting
+# 2 [✔] Better <TITLE> screen (not just "Click mouse")
+# 3 [-] Add sound effect and music.
 
 import pygame
 import os
@@ -14,7 +14,7 @@ pygame.font.init()
 
 WIDTH, HEIGHT = 750, 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space Invaders Clone")
+pygame.display.set_caption("Invaders!!!")
 
 # Load images
 RED_SPACE_SHIP    = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -253,12 +253,15 @@ def main():
         player.move_lasers(-laser_vel, enemies)
 
 def main_menu():
-    title_font = pygame.font.SysFont("comicsans", 70)
+    title_font = pygame.font.SysFont("comicsans", 30)
+    game_font = pygame.font.SysFont("comicsans", 100)
     run = True
     while run:
         WIN.blit(BG, (0,0))
         title_label = title_font.render("Click the mouse to begin...", 1, (255,255,255))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2,350))
+        game_label = game_font.render("INVADERS!!!", 1, (0, 255, 0))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2,650))
+        WIN.blit(game_label, (WIDTH/2 - game_label.get_width()/2, 250))
         pygame.display.update()
 
         for event in pygame.event.get():
