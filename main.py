@@ -1,11 +1,11 @@
-# VERSION 0.3f
+# VERSION 0.4
 # Message to make sure that merge works now without issues.
 # credit to TechWithTim (Youtuber) for this code tutorial project.
 # TODO LIST:
 # 1 [✔] Get perfect center for enemy lasers shooting
 # 2 [✔] Better <TITLE> screen (not just "Click mouse")
 # 3 [✔] Add music.
-# 4 [-] Add bullets shot counter
+# 4 [✔] Add bullets shot counter
 # 5 [-] Add a <PAUSE> function keybind (probably 'p' to pause)
 
 import pygame
@@ -202,8 +202,8 @@ def main():
 
         WIN.blit(lives_label, (10, 10))
         WIN.blit(wave_label, (WIDTH - wave_label.get_width() - 10, 10))
-        WIN.blit(shots_label, (10, 50))
-
+        WIN.blit(shots_label, (WIDTH - shots_label.get_width() - 10, 700))
+        
         for enemy in enemies:
             enemy.draw(WIN)
 
