@@ -1,5 +1,4 @@
-# VERSION 0.4
-# Message to make sure that merge works now without issues.
+# VERSION 0.4b
 # credit to TechWithTim (Youtuber) for this code tutorial project.
 # TODO LIST:
 # 1 [✔] Get perfect center for enemy lasers shooting
@@ -218,7 +217,7 @@ def main():
     while run:
         clock.tick(FPS)
         redraw_window()
-
+        
         if lives <= 0 or player.health <= 0:
             lost = True
             lost_count += 1
@@ -251,7 +250,7 @@ def main():
             player.y += player_vel
         if keys[pygame.K_SPACE]:
             player.shoot()
-
+        
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
             enemy.move_lasers(laser_vel, player)
